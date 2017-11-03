@@ -4,7 +4,13 @@ import Data.ByteString.Char8 (ByteString)
 
 type Image = String
 type Tag = String
-type Port = Integer
+type Protocol = String
+type Number = Integer
+data Port
+  = PortNumber Number
+  | PortProtocol Number Protocol
+  deriving (Eq, Ord, Show)
+
 type Directory = String
 
 data BaseImage
