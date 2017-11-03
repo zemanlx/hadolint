@@ -188,6 +188,10 @@ main = hspec $ do
     it "has one arg" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80"
     it "invalid port" $ ruleCatches invalidPort "EXPOSE 80000"
     it "valid port" $ ruleCatchesNot invalidPort "EXPOSE 60000"
+    it "use tcp protocol" $ ruleCatchesNot invalidPort "EXPOSE 8080/tcp"
+    it "use TCP protocol" $ ruleCatchesNot invalidPort "EXPOSE 8080/TCP"
+    it "use udp protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/udp"
+    it "use UDP protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/UDP"
 
   describe "pip pinning" $ do
     it "pip2 version not pinned" $ ruleCatches pipVersionPinned "RUN pip2 install MySQL_python"
