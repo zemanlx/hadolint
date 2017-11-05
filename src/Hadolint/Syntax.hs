@@ -8,7 +8,7 @@ type Protocol = String
 type Number = Integer
 data Port
   = PortNumber Number
-  | PortProtocol Number Protocol
+  | PortNumberProtocol Number Protocol
   deriving (Eq, Ord, Show)
 
 type Directory = String

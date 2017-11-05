@@ -144,10 +144,26 @@ add = do
   dst <- untilOccurrence "\n"
   return $ Add src dst
 
+portNumberProtocol :: Parser Port
+portNumberProtocol = do
+  number <- many (noneOf "/\n")
+  oneOf "/"
+  protocol <- untilOccurrence " \n"
+  return $ PortNumberProtocol number protocol
+
+portNumber :: Parser Port
+portNumber = do
+  number <- natural
+  return $ PortNumber number
+
+port :: Parser Port
+port = try portNumberProtocol
+    <|> try portNumber
+
 expose :: Parser Instruction
 expose = do
   reserved "EXPOSE"
-  ports <- many natural
+  ports <- many port
   return $ Expose ports
 
 run :: Parser Instruction
