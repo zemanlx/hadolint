@@ -192,6 +192,8 @@ main = hspec $ do
     it "use TCP protocol" $ ruleCatchesNot invalidPort "EXPOSE 8080/TCP"
     it "use udp protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/udp"
     it "use UDP protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/UDP"
+    it "has more args" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80 53/udp"
+    it "use valid port with more args" $ ruleCatchesNot invalidPort "EXPOSE 80 53/udp"
 
   describe "pip pinning" $ do
     it "pip2 version not pinned" $ ruleCatches pipVersionPinned "RUN pip2 install MySQL_python"
