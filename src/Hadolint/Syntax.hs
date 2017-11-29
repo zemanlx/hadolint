@@ -6,9 +6,7 @@ type Image = String
 type Tag = String
 type Protocol = String
 type Number = Integer
-data Port
-  = PortNumber Number
-  | PortNumberProtocol Number Protocol
+data Port = PortNumberProtocol Number Protocol
   deriving (Eq, Ord, Show)
 
 type Directory = String

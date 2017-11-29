@@ -146,15 +146,15 @@ add = do
 
 portNumberProtocol :: Parser Port
 portNumberProtocol = do
-  number <- many (noneOf "/\n")
+  number <- read <$> many1 (noneOf "/\n")
   oneOf "/"
   protocol <- untilOccurrence " \n"
   return $ PortNumberProtocol number protocol
 
 portNumber :: Parser Port
 portNumber = do
-  number <- natural
-  return $ PortNumber number
+  number <- read <$> many1 (noneOf " \n") --natural
+  return $ PortNumberProtocol number "tcp"
 
 port :: Parser Port
 port = try portNumberProtocol

@@ -244,17 +244,18 @@ invalidPort = instructionRule code severity message check
           severity = ErrorC
           message = "Valid UNIX ports range from 0 to 65535"
           --check (Expose ports) = and [p <= 65535 | p <- ports]
-          check (Expose ports) = and [number <= 65535 | PortNumber number <- ports]
           check (Expose ports) = and [number <= 65535 | PortNumberProtocol number _ <- ports]
+          --, and [number <= 65535 | PortNumberProtocol number _ <- ports]]
+          -- check (Expose ports) = and [number <= 65535 | PortNumberProtocol number _ <- ports]
           check _ = True
 
-invalidPortProtocol = instructionRule code severity message check
-    where code = "DL3023"
-          severity = ErrorC
-          message = "Valid protocols are only TCP and UDP"
-          check (Expose ports) = and [hasValidProtocol protocol | PortNumberProtocol _ protocol <- ports ]
-          check _ = True
-          hasValidProtocol protocol = ["tcp", "TCP", "udp", "UDP"] `isInfixOf` port
+-- invalidPortProtocol = instructionRule code severity message check
+--     where code = "DL3023"
+--           severity = ErrorC
+--           message = "Valid protocols are only TCP and UDP"
+--           check (Expose ports) = and [hasValidProtocol protocol | PortNumberProtocol _ protocol <- ports ]
+--           check _ = True
+--           hasValidProtocol protocol = ["tcp", "TCP", "udp", "UDP"] `isInfixOf` port
 
 pipVersionPinned = instructionRule code severity message check
     where code = "DL3013"

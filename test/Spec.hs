@@ -186,13 +186,16 @@ main = hspec $ do
   describe "EXPOSE rules" $ do
     it "has no arg" $ ruleCatches exposeMissingArgs "EXPOSE"
     it "has one arg" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80"
+    it "has more args no protocol" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80 8080"
+    it "has more args" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80/tcp 53/udp"
     it "invalid port" $ ruleCatches invalidPort "EXPOSE 80000"
+    it "invalid port with protocol" $ ruleCatches invalidPort "EXPOSE 80000/tcp"
+    it "invalid port in list" $ ruleCatches invalidPort "EXPOSE 123456789/tcp 80"
     it "valid port" $ ruleCatchesNot invalidPort "EXPOSE 60000"
-    it "use tcp protocol" $ ruleCatchesNot invalidPort "EXPOSE 8080/tcp"
-    it "use TCP protocol" $ ruleCatchesNot invalidPort "EXPOSE 8080/TCP"
+    it "use tcp protocol" $ ruleCatchesNot invalidPort "EXPOSE 80/tcp"
+    it "use TCP protocol" $ ruleCatchesNot invalidPort "EXPOSE 80/TCP"
     it "use udp protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/udp"
     it "use UDP protocol" $ ruleCatchesNot invalidPort "EXPOSE 53/UDP"
-    it "has more args" $ ruleCatchesNot exposeMissingArgs "EXPOSE 80 53/udp"
     it "use valid port with more args" $ ruleCatchesNot invalidPort "EXPOSE 80 53/udp"
 
   describe "pip pinning" $ do
