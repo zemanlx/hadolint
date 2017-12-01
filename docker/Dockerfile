@@ -6,7 +6,7 @@ RUN apt-get update \
     libffi-dev=3.2.1-6 \
     libgmp-dev=2:6.1.2+dfsg-1 \
     zlib1g-dev=1:1.2.8.dfsg-5 \
-    curl=7.52.1-5+deb9u2 \
+    curl=7.52.1-5+deb9u3 \
     ca-certificates=20161130+nmu1 \
     git=1:2.11.0-3+deb9u2 \
     netbase=5.4 \
@@ -15,9 +15,12 @@ RUN apt-get update \
 RUN curl -sSL https://get.haskellstack.org/ | sh
 
 WORKDIR /opt/hadolint/
+COPY hadolint.cabal stack.yaml /opt/hadolint/ 
+RUN stack --no-terminal --install-ghc test --only-dependencies
+
 COPY . /opt/hadolint
 RUN scripts/fetch_version.sh \
-  && stack install --install-ghc --ghc-options="-fPIC"
+  && stack install --ghc-options="-fPIC"
 
 # COMPRESS WITH UPX
 RUN curl -sSL https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_linux.tar.xz \
