@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS builder
+FROM debian:stretch-slim AS hadolint-builder-stage-1
 
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
@@ -15,12 +15,14 @@ RUN apt-get update \
 RUN curl -sSL https://get.haskellstack.org/ | sh
 
 WORKDIR /opt/hadolint/
-COPY hadolint.cabal stack.yaml /opt/hadolint/ 
-RUN stack --no-terminal --install-ghc test --only-dependencies
+COPY hadolint.cabal stack.yaml /opt/hadolint/
+RUN stack --no-terminal --install-ghc test --only-dependencies \
+  && rm -rf /root/.stack/programs/x86_64-linux/ghc-*/ /root/.stack/programs/x86_64-linux/ghc-*.installed /root/.stack/indices/
 
+FROM zemanlx/hadolint-builder:stage-1 AS hadolint-builder-stage-2
 COPY . /opt/hadolint
 RUN scripts/fetch_version.sh \
-  && stack install --ghc-options="-fPIC"
+  && stack install --install-ghc --ghc-options="-fPIC"
 
 # COMPRESS WITH UPX
 RUN curl -sSL https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_linux.tar.xz \
@@ -28,5 +30,5 @@ RUN curl -sSL https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_
   && ./upx --best --ultra-brute /root/.local/bin/hadolint
 
 FROM busybox:1.27.2-glibc AS distro
-COPY --from=builder /root/.local/bin/hadolint /bin/
+COPY --from=hadolint-builder-stage-2 /root/.local/bin/hadolint /bin/
 CMD ["/bin/hadolint", "-"]
