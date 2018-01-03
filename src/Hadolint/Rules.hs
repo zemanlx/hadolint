@@ -321,7 +321,6 @@ exposeMissingArgs = instructionRule code severity message check
     severity = ErrorC
     message = "EXPOSE requires at least one argument"
     check (LDS.Expose (LDS.Ports ports)) = not (null ports)
-    check (LDS.Expose (LDS.PortStr "")) = False
     check _ = True
 
 copyMissingArgs = instructionRule code severity message check
