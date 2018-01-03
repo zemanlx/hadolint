@@ -215,8 +215,8 @@ noUntagged = instructionRule code severity message check
     code = "DL3006"
     severity = WarningC
     message = "Always tag the version of an image explicitly."
-    check (LDS.From (LDS.UntaggedImage image)) = image == "scratch"
-    check (LDS.From (LDS.TaggedImage _ _)) = True
+    check (LDS.From (LDS.UntaggedImage image _)) = image == "scratch"
+    check (LDS.From (LDS.TaggedImage _ _ _)) = True
     check _ = True
 
 noLatestTag = instructionRule code severity message check
@@ -226,8 +226,8 @@ noLatestTag = instructionRule code severity message check
     message =
         "Using latest is prone to errors if the image will ever update. Pin the version explicitly \
         \to a release tag."
-    check (LDS.From (LDS.TaggedImage _ tag)) =
-        not (isPrefixOf "latest AS" tag || isPrefixOf "latest as" tag || tag == "latest")
+    check (LDS.From (LDS.TaggedImage _ tag _)) =
+        tag /= "latest"
     check _ = True
 
 aptGetVersionPinned = instructionRule code severity message check
