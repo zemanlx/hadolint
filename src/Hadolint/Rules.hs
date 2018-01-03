@@ -51,9 +51,9 @@ instructionRule code severity message = mapInstructions $ Metadata code severity
 dockerfileRule :: String -> Severity -> String -> ([LDS.Instruction] -> Bool) -> Rule
 dockerfileRule code severity message f = rule
   where
-    rule dockerfile = [Check metadata (filename dockerfile) (-1) (f (map instruction dockerfile))]
+    rule dockerfile = [Check metadata (filename dockerfile) (-1) (f (map LDS.instruction dockerfile))]
     metadata = Metadata code severity message
-    filename dockerfile = sourcename $ head dockerfile
+    filename dockerfile = LDS.sourcename $ head dockerfile
 
 -- Enforce rules on a dockerfile and return failed checks
 analyze :: [Rule] -> LDS.Dockerfile -> [Check]
