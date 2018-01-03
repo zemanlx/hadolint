@@ -336,7 +336,8 @@ invalidPort = instructionRule code severity message check
     code = "DL3011"
     severity = ErrorC
     message = "Valid UNIX ports range from 0 to 65535"
-    check (LDS.Expose (LDS.Ports ports)) = and [p <= 65535 | p <- ports]
+    check (LDS.Expose (LDS.Ports ports)) = and [ number <= 65535 | LDS.Port number _ <- ports]
+    -- TODO add check for LDS.PortRange
     check _ = True
 
 pipVersionPinned = instructionRule code severity message check
