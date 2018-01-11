@@ -81,6 +81,14 @@ matrix:
       script:
         # List images
         - docker image ls
+        # Structure test
+        - docker run -i --rm
+          -v /var/run/docker.sock:/var/run/docker.sock
+          -v ${PWD}:/test
+          zemanlx/container-structure-test:master-alpine
+            -test.v
+            -image hadolint:$(git describe --tags --dirty)
+            /test/docker/structure-tests.yaml
         # Lint its own Dockerfile
         - docker run --rm -i hadolint:$(git describe --tags --dirty) <
           docker/Dockerfile
