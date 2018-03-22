@@ -70,10 +70,18 @@ matrix:
         - docker
       before_install: true
       install:
+        - export RESOLVER=$(grep -Eo "lts-[0-9]+\.[0-9]+" stack.yaml)
+        # Pull or build hadolint-builder image
+        - docker pull zemanlx/hadolint-builder:${RESOLVER} ||
+          docker build
+            --tag zemanlx/hadolint-builder:${RESOLVER}
+            --target hadolint-builder
+            --file docker/Dockerfile .
         # Build image
         - travis_wait 30 docker build
-          --tag hadolint:$(git describe --tags --dirty)
-          --file docker/Dockerfile .
+            --cache-from zemanlx/hadolint-builder:${RESOLVER}
+            --tag hadolint:$(git describe --tags --dirty)
+            --file docker/Dockerfile .
       script:
         # List images
         - docker image ls

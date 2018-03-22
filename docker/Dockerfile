@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS builder
+FROM debian:stretch-slim AS hadolint-builder
 
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
@@ -16,8 +16,14 @@ RUN curl -sSL https://get.haskellstack.org/ | sh
 
 WORKDIR /opt/hadolint/
 COPY stack.yaml package.yaml /opt/hadolint/
-RUN stack --no-terminal --install-ghc test --only-dependencies
+RUN stack --no-terminal --install-ghc test --only-dependencies \
+  && rm -rf /root/.stack/programs/x86_64-linux/ghc-*.installed \
+    /root/.stack/programs/x86_64-linux/ghc-*/* \
+    /root/.stack/indices/Hackage/0*-index.tar \
+    /root/.stack/indices/Hackage/0*-index.cache
 
+# hadolint ignore=DL3306
+FROM hadolint-builder AS binary-builder
 COPY . /opt/hadolint
 RUN scripts/fetch_version.sh \
   && stack install --ghc-options="-fPIC"
@@ -29,5 +35,5 @@ RUN curl -sSL https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_
 
 FROM debian:stretch-slim AS distro
 ENV LC_ALL=C.UTF-8
-COPY --from=builder /root/.local/bin/hadolint /bin/
+COPY --from=binary-builder /root/.local/bin/hadolint /bin/
 CMD ["/bin/hadolint", "-"]
