@@ -25,7 +25,8 @@ RUN stack --no-terminal --install-ghc test --only-dependencies \
 # hadolint ignore=DL3306
 FROM hadolint-builder AS binary-builder
 COPY . /opt/hadolint
-RUN scripts/fetch_version.sh \
+RUN gzip /root/.stack/indices/Hackage/0*-index.tar.gz \
+  && scripts/fetch_version.sh \
   && stack install --ghc-options="-fPIC"
 
 # COMPRESS WITH UPX
