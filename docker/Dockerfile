@@ -17,10 +17,13 @@ RUN curl -sSL https://get.haskellstack.org/ | sh
 WORKDIR /opt/hadolint/
 COPY stack.yaml package.yaml /opt/hadolint/
 RUN stack --no-terminal --install-ghc test --only-dependencies \
-  && rm -rf /root/.stack/programs/x86_64-linux/ghc-*.installed \
+  # Delete files that can be restored or are not needed
+  && rm -rf \
+    # GHC (1)
+    /root/.stack/programs/x86_64-linux/ghc-*.installed \
     /root/.stack/programs/x86_64-linux/ghc-*/* \
-    /root/.stack/indices/Hackage/0*-index.tar \
-    /root/.stack/indices/Hackage/0*-index.cache
+    # legacy index
+    /root/.stack/indices/Hackage/00-index.tar
 
 # hadolint ignore=DL3306
 FROM hadolint-builder AS binary-builder
