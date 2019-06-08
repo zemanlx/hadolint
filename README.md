@@ -2,7 +2,8 @@
 [![Windows Build status][appveyor-img]][appveyor]
 [![GPL-3 licensed][license-img]][license]
 [![GitHub release][release-img]][release]
-[![Github downloads][downloads-img]]()
+[![Github downloads][downloads-img]][![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzemanlx%2Fhadolint.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzemanlx%2Fhadolint?ref=badge_shield)
+()
 <img align="right" alt="pipecat" width="150"
 src="http://hadolint.lukasmartinelli.ch/img/cat_container.png" />
 
@@ -290,3 +291,7 @@ a look at [Syntax.hs][] in the `language-docker` project to see the AST definiti
 [create an issue]: https://github.com/hadolint/hadolint/issues/new
 [dockerfile reference]: http://docs.docker.com/engine/reference/builder/
 [syntax.hs]: https://www.stackage.org/haddock/nightly-2018-01-07/language-docker-2.0.1/Language-Docker-Syntax.html
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzemanlx%2Fhadolint.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzemanlx%2Fhadolint?ref=badge_large)
